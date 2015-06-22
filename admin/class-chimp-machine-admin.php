@@ -3,7 +3,7 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * @link       http://example.com
+ * @link       http://webmachine.io/chimp-machine
  * @since      1.0.0
  *
  * @package    Chimp_Machine
@@ -18,7 +18,7 @@
  *
  * @package    Chimp_Machine
  * @subpackage Chimp_Machine/admin
- * @author     Your Name <email@example.com>
+ * @author     Christopher Mosure <cj@webmachine.io>
  */
 class Chimp_Machine_Admin {
 

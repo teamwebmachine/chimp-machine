@@ -5,7 +5,7 @@
  *
  * This file is used to markup the admin-facing aspects of the plugin.
  *
- * @link       http://example.com
+ * @link       http://webmachine.io/chimp-machine
  * @since      1.0.0
  *
  * @package    Chimp_Machine

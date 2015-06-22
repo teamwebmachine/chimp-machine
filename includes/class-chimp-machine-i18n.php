@@ -6,7 +6,7 @@
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
  *
- * @link       http://example.com
+ * @link       http://webmachine.io/chimp-machine
  * @since      1.0.0
  *
  * @package    Chimp_Machine
@@ -22,7 +22,7 @@
  * @since      1.0.0
  * @package    Chimp_Machine
  * @subpackage Chimp_Machine/includes
- * @author     Your Name <email@example.com>
+ * @author     Christopher Mosure <cj@webmachine.io>
  */
 class Chimp_Machine_i18n {
 
