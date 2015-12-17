@@ -162,7 +162,10 @@ class Chimp_Machine_Admin {
 		);
 
 		// Verify API settings
-		$this->chimp_machine_api_verify($mcapi, $mcapidatacenter);
+		if ( $mcapi ) {
+			$this->chimp_machine_api_verify($mcapi, $mcapidatacenter);
+		}
+		
 	}
 
 
@@ -182,14 +185,18 @@ class Chimp_Machine_Admin {
 			)
 		);
 		$response = wp_remote_get($url, $args);
-		$data = json_decode($response['body'], true);
 
-		if ( $response['response']['code'] == '200') {
-			echo '<br /><em><strong><span style="color:#00ff00;">Success!</span></strong><br />You are connected to the "' . $data['account_name'] . '" MailChimp account.</em>';
-		} else {
-			echo '<br /><em><span style="color:#ff0000;">There is an issue with your Mailchimp API key.</span><br />' . $data['title'] . ': ' . $data['detail'] . '</em>';
+		if ( is_object($response) ) {
+			if ($response->errors) {
+				echo '<br /><em><span style="color:#ff0000;">Your Mailchimp API key is invalid.</span><br /> See <a href="http://kb.mailchimp.com/accounts/management/about-api-keys">Mailchimp KB: About API Keys</a> for help.</em>';
+			}
+		} elseif ( is_array($response) ) {
+			$data = json_decode($response['body'], true);
+			if ( $response['response']['code'] == '200') {
+				echo '<br /><em><strong><span style="color:#00ff00;">Success!</span></strong><br />You are connected to the "' . $data['account_name'] . '" MailChimp account.</em>';
+			} else {
+				echo '<br /><em><span style="color:#ff0000;">There is an issue with your Mailchimp API key.</span><br />' . $data['title'] . ': ' . $data['detail'] . '</em>';
+			}
 		}
 	}
-
-
 }
