@@ -47,6 +47,15 @@ class Chimp_Machine_Admin {
 	private $option_name = 'chimp_machine';
 
 	/**
+	 * If the plugin is authorized to a Mailchimp account.
+	 *
+	 * @since  	1.0.0
+	 * @access 	public
+	 * @var  	string 		$option_name 	Option name of this plugin
+	 */
+	public $api_authorized = false;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -164,9 +173,9 @@ class Chimp_Machine_Admin {
 		// Verify API settings
 		if ( $mcapi ) {
 			$this->chimp_machine_api_verify($mcapi, $mcapidatacenter);
-		}
-		
+		}	
 	}
+
 
 
 	/**
@@ -174,10 +183,14 @@ class Chimp_Machine_Admin {
 	 *
 	 * @since 1.0.0
 	 */
-	public function chimp_machine_api_verify($mcapi, $mcapidatacenter) {
+	private function chimp_machine_api_operation($resource, $check = true) {
+		if ($check) {
+			if ( $this->api_authorized == false ) { return 'error'; }
+		}
+		$mcapi = get_option( $this->option_name . '_mcapi' );
+		$mcapidatacenter = get_option( $this->option_name . '_mcapidatacenter' );
 		$auth = base64_encode( 'user:' . $mcapi );
-		$url  = 'https://' . $mcapidatacenter . '.api.mailchimp.com/3.0/';
-
+		$url  = 'https://' . $mcapidatacenter . '.api.mailchimp.com/3.0' . $resource;
 		$args = array(
 			'headers' => array(
 				'Authorization' => 'Basic ' . $auth,
@@ -185,18 +198,35 @@ class Chimp_Machine_Admin {
 			)
 		);
 		$response = wp_remote_get($url, $args);
-
 		if ( is_object($response) ) {
-			if ($response->errors) {
-				echo '<br /><em><span style="color:#ff0000;">Your Mailchimp API key is invalid.</span><br /> See <a href="http://kb.mailchimp.com/accounts/management/about-api-keys">Mailchimp KB: About API Keys</a> for help.</em>';
+			if ( $response->errors ) {
+				return 'error';
 			}
-		} elseif ( is_array($response) ) {
-			$data = json_decode($response['body'], true);
-			if ( $response['response']['code'] == '200') {
-				echo '<br /><em><strong><span style="color:#00ff00;">Success!</span></strong><br />You are connected to the "' . $data['account_name'] . '" MailChimp account.</em>';
-			} else {
-				echo '<br /><em><span style="color:#ff0000;">There is an issue with your Mailchimp API key.</span><br />' . $data['title'] . ': ' . $data['detail'] . '</em>';
-			}
+		} elseif ( is_array( $response ) ) {
+				if ( $response['response']['code'] == '200' ) {
+					$data = json_decode( $response['body'], true );
+				} else {
+					return 'error';
+				}
+				return $data;
+		} else {
+			return 'error';
+		}
+	}
+
+	/**
+	 * Check if Mailchimp API key is valid
+	 *
+	 * @since 1.0.0
+	 */
+	private function chimp_machine_api_verify($mcapi, $mcapidatacenter) {
+		$data = $this->chimp_machine_api_operation('/', false);
+		if ( $data == 'error' ) {
+			echo '<div class="cmnotice errored"><span>Your Mailchimp API key is invalid or not authorized.</span><br /> See <a href="http://kb.mailchimp.com/accounts/management/about-api-keys">Mailchimp KB: About API Keys</a> for help.</div>';
+			$this->api_authorized = false;
+		} else {
+			echo '<div class="cmnotice success"><span>Looks good!</span><br />You are connected to the "' . $data['account_name'] . '" MailChimp account.</div>';
+				$this->api_authorized = true;
 		}
 	}
 }

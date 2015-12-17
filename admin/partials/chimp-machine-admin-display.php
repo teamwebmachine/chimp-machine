@@ -15,7 +15,7 @@
 
 <div class="wrap">
     <h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
-    <form action="options.php" method="post">
+    <form class="chimp-machine-settings" action="options.php" method="post">
         <?php
             settings_fields( $this->Chimp_Machine );
             do_settings_sections( $this->Chimp_Machine );

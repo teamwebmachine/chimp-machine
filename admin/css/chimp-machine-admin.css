@@ -2,3 +2,23 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+
+form.chimp-machine-settings input#chimp_machine_mcapi {
+	width:375px;
+}
+form.chimp-machine-settings .cmnotice {
+	margin-top:5px;
+	display:block;
+	padding:5px;
+}
+form.chimp-machine-settings .cmnotice.success { }
+form.chimp-machine-settings .cmnotice.success span {
+	font-weight:bold;
+	color: #46b450;
+}
+form.chimp-machine-settings .cmnotice.errored { }
+form.chimp-machine-settings .cmnotice.errored span {
+	font-weight:bold;
+	color: #ff0000;
+}
