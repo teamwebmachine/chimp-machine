@@ -27,9 +27,10 @@ class Chimp_Machine_Activator {
 	 *
 	 * Long Description.
 	 *
-	 * @since    0.1.0
+	 * @since    1.0.0
 	 */
 	public static function activate() {
+
 
 	}
 

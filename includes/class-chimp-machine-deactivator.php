@@ -27,7 +27,7 @@ class Chimp_Machine_Deactivator {
 	 *
 	 * Long Description.
 	 *
-	 * @since    0.1.0
+	 * @since    1.0.0
 	 */
 	public static function deactivate() {
 
