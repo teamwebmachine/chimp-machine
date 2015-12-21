@@ -114,7 +114,8 @@ class Chimp_Machine_Admin {
 	 * @since  1.0.0
 	 */
 	public function display_options_page() {
-		include_once 'partials/chimp-machine-admin-display.php';
+		//include_once 'partials/chimp-machine-admin-display.php';
+		include 'partials/settings.php';
 	}
 
 	/**
@@ -163,7 +164,6 @@ class Chimp_Machine_Admin {
 	public function chimp_machine_mcapi_cb() {
 		$mcapi = get_option( $this->option_name . '_mcapi' );
 		echo '<input type="text" name="' . $this->option_name . '_mcapi' . '" id="' . $this->option_name . '_mcapi' . '" value="' . $mcapi . '"> ';
-		// Set Datacenter as well!
 		$mcapidatacenter = substr($mcapi, strpos($mcapi, "-") + 1);
 		update_option(
 			$this->option_name . '_mcapidatacenter',
@@ -235,22 +235,25 @@ class Chimp_Machine_Admin {
 	 * @since 1.0.0
 	 */
 	private function chimp_machine_campaign_list() {
-		if ( $this->api_authorized == false ) { return 'error'; }
 
-		$data = $this->chimp_machine_api_operation('/campaigns', false);
-
+		$data = $this->chimp_machine_api_operation('/campaigns?fields=total_items,campaigns.id,campaigns.archive_url,campaigns.status,campaigns.send_time,campaigns.settings.title&status=sent&count=10', false);
 		//echo $data['archive_url'];
-
 		// $this->chimp_machine_create_posts_from_campaigns('57be2b476b', '2')
 
-		?> <pre> <?php //print_r($data); ?> <?php
-		
-		/*
 		echo '<h3>Campaigns</h3>';
+		echo 'Displaying 10 out of ' . $data['total_items'] . 'campaigns.';
+		
+		//echo '<select name="status"><option value="sent">Sent</option><option value="save">Saved</option><option value="paused">Paused</option><option value="schedule">Scheduled</option><option value="sending">Sending</option></select>';
+
+
 		foreach ($data['campaigns'] as $campaign) {
+
+			$sentDate = strtotime($campaign['send_time']);
+
 			echo '<h4><a href="' . $campaign['archive_url'] . '">' . $campaign['settings']['title'] . '</a></h4>';
+			echo '<p class="meta">' . date('F jS Y', $sentDate) . '</p>';
 		}
-		*/
+		
 	}
 
 	/**

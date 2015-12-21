@@ -3,6 +3,19 @@
  * included in this file.
  */
 
+.clearfix:after {
+     visibility: hidden;
+     display: block;
+     font-size: 0;
+     content: " ";
+     clear: both;
+     height: 0;
+     }
+.clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* close commented backslash hack */
 
 form.chimp-machine-settings input#chimp_machine_mcapi {
 	width:375px;
@@ -21,4 +34,22 @@ form.chimp-machine-settings .cmnotice.errored { }
 form.chimp-machine-settings .cmnotice.errored span {
 	font-weight:bold;
 	color: #ff0000;
+}
+
+
+.campaignFilter {
+	display:block;
+	margin:15px 0px;
+	padding:15px;
+	border: 1px solid #ccc;
+	background: #e4e4e4;
+}
+
+.campaignFilter .form-group {
+	float:left;
+	margin-right:15px;
+}
+
+.campaignFilter .form-group label {
+	font-weight:bold;
 }
