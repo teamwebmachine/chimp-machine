@@ -176,8 +176,6 @@ class Chimp_Machine_Admin {
 		}	
 	}
 
-
-
 	/**
 	 * Check if Mailchimp API key is valid
 	 *
@@ -215,12 +213,13 @@ class Chimp_Machine_Admin {
 	}
 
 	/**
-	 * Check if Mailchimp API key is valid
+	 * Check if Mailchimp API key is valid & set $this->api_authorized & display message
 	 *
 	 * @since 1.0.0
 	 */
 	private function chimp_machine_api_verify($mcapi, $mcapidatacenter) {
-		$data = $this->chimp_machine_api_operation('/', false);
+		$data = $this->chimp_machine_api_operation('/?fields=account_id,account_name', false);
+		
 		if ( $data == 'error' ) {
 			echo '<div class="cmnotice errored"><span>Your Mailchimp API key is invalid or not authorized.</span><br /> See <a href="http://kb.mailchimp.com/accounts/management/about-api-keys">Mailchimp KB: About API Keys</a> for help.</div>';
 			$this->api_authorized = false;
@@ -229,4 +228,54 @@ class Chimp_Machine_Admin {
 				$this->api_authorized = true;
 		}
 	}
+
+	/**
+	 * Check if Mailchimp API key is valid
+	 *
+	 * @since 1.0.0
+	 */
+	private function chimp_machine_campaign_list() {
+		if ( $this->api_authorized == false ) { return 'error'; }
+
+		$data = $this->chimp_machine_api_operation('/campaigns', false);
+
+		//echo $data['archive_url'];
+
+		// $this->chimp_machine_create_posts_from_campaigns('57be2b476b', '2')
+
+		?> <pre> <?php //print_r($data); ?> <?php
+		
+		/*
+		echo '<h3>Campaigns</h3>';
+		foreach ($data['campaigns'] as $campaign) {
+			echo '<h4><a href="' . $campaign['archive_url'] . '">' . $campaign['settings']['title'] . '</a></h4>';
+		}
+		*/
+	}
+
+	/**
+	 * Create posts from mailchimp campaigns.
+	 *
+	 * @since 1.0.0
+	 */
+
+	public function chimp_machine_create_posts_from_campaigns($campaignId, $categoryId) {
+
+		$campaign_parameters = '/campaigns/' . $campaignId;
+		$campaign_data = $this->chimp_machine_api_operation($campaign_parameters, false);
+
+		$post_title = $campaign_data['settings']['subject_line'];
+		$post_content = '<iframe src="' . $campaign_data['archive_url'] . '" width="100%" height="1000px" frameborder="0">You need iframes enabled to view this content.</iframe>';
+
+		$post = array(
+		  'post_content'   => $post_content,
+		  'post_title'     => $post_title,
+		  'post_status'    => 'publish',
+		  'post_category'  => array($categoryId)
+		);  
+
+		//echo wp_insert_post( $post );
+
+	}
+
 }

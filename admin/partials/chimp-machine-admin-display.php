@@ -22,4 +22,7 @@
             submit_button();
         ?>
     </form>
+
+    
+    <?php $this->chimp_machine_campaign_list(); ?>
 </div>
